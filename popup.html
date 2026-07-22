@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santoral Tradicional</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/componentes.css">
+    <link rel="stylesheet" href="css/alertas.css">
+    <link rel="stylesheet" href="css/modales.css">
+    <link rel="stylesheet" href="css/tema-oscuro.css">
+</head>
+<body>
+
+    <button id="btn-toggle-tema" title="Modo Nocturno / Diurno">🌙</button>
+
+    <h1 id="titulo-principal">Santoral Tradicional</h1>
+
+    <div id="vista-principal">
+        <div id="contenedor-calendario">
+            <div id="btn-toggle-calendario" class="btn-desplegar">☩ DESPLEGAR CALENDARIO ▾ ☩</div>
+            
+            <div id="contenido-calendario" style="display: none;">
+                <div id="widget-calendario">
+                    <div class="cal-header">
+                        <button id="btn-mes-ant" class="cal-btn" title="Mes Anterior">◀</button>
+                        <span id="cal-mes-anio" class="mes-anio-interactivo" title="Haz clic para cambiar de mes y año"></span>
+                        <button id="btn-mes-sig" class="cal-btn" title="Mes Siguiente">▶</button>
+                    </div>
+                    
+                    <div id="selector-rapido" class="selector-rapido-container">
+                        <select id="sr-mes" class="sr-input"></select>
+                        <input type="number" id="sr-anio" class="sr-input" min="1962" max="2100" title="Año">
+                        <button id="sr-btn-ir" class="cal-btn">IR</button>
+                    </div>
+
+                    <div class="cal-dias-semana">
+                        <span>Do</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span>
+                    </div>
+                    <div id="cal-grid" class="cal-cuadricula"></div>
+                </div>
+
+                <div id="leyenda-colores">
+                    <div class="leyenda-item"><div class="caja-color color-i-movil"></div> I Clase (Móvil)</div>
+                    <div class="leyenda-item"><div class="caja-color color-i-fijo"></div> I Clase (Fija)</div>
+                    <div class="leyenda-item"><div class="caja-color color-ii-gana"></div> II Clase (Fiesta del Señor)</div>
+                    <div class="leyenda-item"><div class="caja-color color-ii-pierde"></div> II Clase (Normal)</div>
+                    <div class="leyenda-item"><div class="caja-color color-domingo"></div> Domingo Ordinario (II)</div>
+                    <div class="leyenda-item"><div class="caja-color color-iii"></div> III Clase</div>
+                    <div class="leyenda-item"><div class="caja-color color-conmemoracion"></div> Conmemoración</div>
+                    <div class="leyenda-item" style="margin-top: 5px; width: 100%; text-align: center; border-top: 1px dotted #ccc; padding-top: 5px;"><b>☩ Octavas Mayores ☩</b></div>
+                    <div class="leyenda-item"><div class="caja-color color-octava-pascua"></div> Pascua</div>
+                    <div class="leyenda-item"><div class="caja-color color-octava-pentecostes"></div> Pentecostés</div>
+                    <div class="leyenda-item"><div class="caja-color color-octava-navidad"></div> Navidad</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="banner-precepto" style="display: none;">
+            <div id="btn-toggle-precepto" class="btn-desplegar-precepto">
+                <span id="texto-precepto-titulo"></span>
+            </div>
+            <div id="contenido-precepto" style="display: none;">
+                <p id="texto-precepto-mensaje"></p>
+                <div class="contenedor-btn-alerta">
+                    <button id="btn-abrir-misa" class="btn-accion-liturgica btn-alerta-full btn-misa-dorado">¿Qué es la Santa Misa?</button>
+                    <button id="btn-abrir-servilia" class="btn-accion-liturgica btn-alerta-full btn-misa-dorado">¿Qué es la Opera Servilia?</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="banner-ayuno" style="display: none;">
+            <div id="btn-toggle-ayuno" class="btn-desplegar-ayuno">
+                <span id="texto-ayuno-titulo"></span>
+            </div>
+            <div id="contenido-ayuno" style="display: none;">
+                <p id="texto-ayuno-mensaje" class="texto-alerta-principal"></p>
+                <button id="btn-abrir-ayuno-info" class="btn-accion-liturgica btn-rojo">¿Qué es el Ayuno?</button>
+            </div>
+        </div>
+
+        <div id="banner-abstinencia" style="display: none;">
+            <div id="btn-toggle-abstinencia" class="btn-desplegar-abstinencia">
+                <span id="texto-abstinencia-titulo"></span>
+            </div>
+            <div id="contenido-abstinencia" style="display: none;">
+                <p id="texto-abstinencia-mensaje" class="texto-alerta-principal"></p>
+                <button id="btn-abrir-abstinencia-info" class="btn-accion-liturgica btn-rojo">¿Por qué sin carne?</button>
+            </div>
+        </div>
+
+        <div id="banner-octava" style="display: none; margin-bottom: 15px;">
+            <div id="btn-toggle-octava" class="btn-toggle-alerta">
+                <span id="texto-octava-titulo">☩ OCTAVA EN CURSO ▾ ☩</span>
+            </div>
+            <div id="contenido-octava" class="contenido-alerta" style="display: none;">
+                <p id="texto-octava-mensaje" class="texto-alerta-mensaje"></p>
+                <div style="text-align: center;">
+                    <button id="btn-abrir-octava-info" class="btn-accion-liturgica btn-dorado">¿Qué es una Octava?</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="banner-rogativa" style="display: none; margin-bottom: 15px;">
+            <div id="btn-toggle-rogativa" class="btn-toggle-alerta">
+                <span id="texto-rogativa-titulo">☩ DÍA DE ROGATIVAS ▾ ☩</span>
+            </div>
+            <div id="contenido-rogativa" class="contenido-alerta" style="display: none;">
+                <p id="texto-rogativa-mensaje" class="texto-alerta-mensaje"></p>
+                <div style="text-align: center;">
+                    <button id="btn-abrir-rogativa-info" class="btn-accion-liturgica btn-lila">¿Qué son las Rogativas?</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="banner-reparacion" style="display: none; margin-bottom: 15px;">
+            <div id="btn-toggle-reparacion" class="btn-toggle-alerta">
+                <span id="texto-reparacion-titulo">☩ DÍA DE REPARACIÓN ▾ ☩</span>
+            </div>
+            <div id="contenido-reparacion" class="contenido-alerta" style="display: none;">
+                <p id="texto-reparacion-mensaje" class="texto-alerta-mensaje"></p>
+                <div style="text-align: center;">
+                    <button id="btn-abrir-reparacion-info" class="btn-accion-liturgica btn-dorado">¿Qué son las Devociones de Reparación?</button>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="titulo-santo">Cargando...</h2>
+        <p id="clase-liturgica" class="clase"></p>
+        <img id="imagen-santo" class="imagen-santo" src="" alt="Imagen del Santo">
+        
+        <div id="banner-vigilia" style="display: none;">
+            <div id="btn-toggle-vigilia" class="btn-toggle-alerta">
+                <span id="texto-vigilia-titulo">☩ DÍA DE VIGILIA ▾ ☩</span>
+            </div>
+            <div id="contenido-vigilia" class="contenido-alerta" style="display: none;">
+                <p class="texto-alerta-mensaje">
+                    La Santa Iglesia viste hoy de luto penitencial (morado). Se exhorta vivamente a los fieles a purificar su alma mediante la Confesión Sacramental, velando en gracia para comulgar dignamente en la gran festividad de mañana.
+                </p>
+                <div style="text-align: center;">
+                    <button id="btn-abrir-vigilia-info" class="btn-accion-liturgica btn-morado">¿Qué es la Vigilia?</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="alerta-rubrica">
+            <h3>Rúbrica de Ocurrencia y Precedencia</h3>
+            <p id="texto-alerta-rubrica"></p>
+            <button id="btn-volver">Volver a la Festividad Principal</button>
+        </div>
+
+        <div id="info-extra" style="display: none;">
+            <p id="descripcion" class="texto-justificado"></p>
+
+            <h3 id="titulo-colecta" class="seccion-titulo">Oración Colecta</h3>
+            <p id="oracion-latina" class="latin"></p>
+            <p id="oracion-castellano" class="texto-justificado"></p>
+            <p id="fuente-oracion" class="fuente"></p> 
+
+            <h3 id="titulo-defensa" class="seccion-titulo">Defensa de la Fe</h3>
+            <p id="pensamiento-defensa" class="texto-justificado"></p>
+            <p id="fuente-pensamiento" class="fuente"></p> 
+
+            <div id="contenedor-btn-temporas" style="display: none; text-align: center; margin-top: 15px;">
+                <button id="btn-abrir-temporas" class="btn-accion-liturgica">¿Qué son las Témporas?</button>
+            </div>
+
+            <div id="contenedor-canonizacion" style="display: none;">
+                <h3 class="seccion-titulo">Datos de Culto y Canonización</h3>
+                <p id="info-canonizacion" class="texto-justificado"></p>
+            </div>
+
+            <div id="contenedor-sacramental" style="display: none; margin-top: 15px;">
+                <h3 class="seccion-titulo">Tradición y Sacramental</h3>
+                <p id="info-sacramental" class="texto-justificado"></p>
+                <p id="fuente-sacramental" class="fuente"></p>
+            </div>
+        </div>
+
+        <h3 class="seccion-titulo">Santos del día</h3>
+        <ul id="lista-todos-santos"></ul>
+    </div> 
+    
+    <div id="vista-abstinencia" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #ff4d4d;">
+                <p class="creditos-latin-titulo" style="color: #ff4d4d;">De Abstinentia Carnis</p>
+                <p class="creditos-latin-sub">La privación en memoria de la Pasión</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                A diferencia del Ayuno (que limita la cantidad), la Ley de la Abstinencia dicta sobre la <b>calidad</b> de los alimentos. Es la prohibición inquebrantable de comer carne de animales de sangre caliente (mamíferos y aves), así como los caldos, extractos o jugos derivados de ellos. Esta gravísima obligación vincula bajo precepto a todos los católicos a partir de los <b>7 años de edad</b>, manteniéndose vigente hasta el último día de sus vidas.
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Días de SOLO Abstinencia</h3>
+            <p class="texto-tarjeta-oscura">
+                En estos días no hay límite en la cantidad de comidas que se pueden hacer, pero la privación de la carne es absoluta. Esta regla abarca <b>todos los viernes del año</b> sin excepción, en luto y memoria dolorosa del día en que Nuestro Señor Jesucristo derramó Su Sangre en el Calvario. <br><br>
+                <b>Excepción de oro:</b> Si un viernes llega a coincidir con una Fiesta de Precepto (como la Inmaculada Concepción o la Navidad), la obligación penitencial se anula automáticamente. El gozo de la gloria de la Iglesia triunfa sobre la penitencia corporal.
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Días de Ayuno y Abstinencia Conjunta</h3>
+            <p class="texto-tarjeta-oscura">
+                En las jornadas de mayor rigor para la cristiandad, ambas espadas de mortificación atacan juntas al cuerpo (una sola comida y nada de carne). Estos días son: el Miércoles de Ceniza, todos los viernes y sábados de la Santa Cuaresma (incluyendo ineludiblemente el Viernes y Sábado Santo), los tres días de las Cuatro Témporas (miércoles, viernes y sábado), y las Cuatro Grandes Vigilias del año (Pentecostés, Asunción, Todos los Santos y Navidad).
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                Las reformas post-conciliares demolieron la disciplina tradicional al insinuar que la privación de carne los viernes podía "sustituirse" por otras obras piadosas elegidas al capricho del fiel. El resultado fue trágico: la inmensa mayoría de los católicos dejó de hacer penitencia por completo. El modernismo secularizó los viernes, convirtiéndolos en el inicio del ocio del fin de semana, olvidando que es el día de la muerte del Salvador. Quien ama la Cruz, abraza la abstinencia sin rebajarla.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Código de Derecho Canónico (1917): Canon 1250 (Ley y materia de la abstinencia), Canon 1252 (Días obligatorios) y Canon 1254 (Edad de obligación: 7 años).<br>
+                    • Tradición Apostólica universal: Testimonio de la Didajé (s. I) sobre el ayuno y abstinencia de los viernes ("Día de Parasceve").</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-abstinencia-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-ayuno" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #ff4d4d;">
+                <p class="creditos-latin-titulo" style="color: #ff4d4d;">De Iejunio</p>
+                <p class="creditos-latin-sub">La mortificación de la carne como deber sagrado</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                La Ley del Ayuno consiste en la restricción sagrada de la <b>cantidad</b> de alimento, en la cual solo se permite una comida fuerte al día. La Santa Madre Iglesia, como madre compasiva pero firme, tolera tomar algo ligerísimo por la mañana y una pequeña colación por la noche. Es indispensable que estas dos pequeñas porciones juntas no sumen una comida completa. Esta grave ley obliga bajo precepto a los católicos desde los 21 hasta los 59 años cumplidos.
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Días de solo Ayuno</h3>
+            <p class="texto-tarjeta-oscura">
+                En estas jornadas rigurosas se mantiene la regla de una comida al día, pero SE PERMITE consumir carne en esa comida principal. Estos días abarcan todos los lunes, martes, miércoles y jueves de la Santa Cuaresma. Es un gravísimo error confundir las rúbricas: el Jueves Santo, al ser un jueves de Cuaresma, es un día de solo ayuno. Históricamente, la prohibición universal de la carne en Cuaresma aplicaba únicamente a los viernes y sábados.
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                "El ayuno purifica el alma, eleva el pensamiento, somete la carne al espíritu, hace al corazón contrito y humillado" (San Agustín). El progresismo ha intentado abolir estas cruces, diciéndole al hombre moderno que la mortificación ya no es importante y que bastan unas obras vagas para salvarse. Han mentido. Sin el sometimiento de la carne, no hay remisión de los pecados ni verdadera adhesión al Calvario.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Código de Derecho Canónico (1917): Canon 1251 (Ley de Ayuno) y Canon 1254 (Edad de obligación: 21 a 59 años).<br>
+                    • Papa Benedicto XIV, Encíclica "Non Ambigimus" (El ayuno como insignia del catolicismo).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-ayuno-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-misa" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #ffd700;">
+                <p class="creditos-latin-titulo" style="color: #ffd700;">Sanctissimum Missæ Sacrificium</p>
+                <p class="creditos-latin-sub">La renovación incruenta del Calvario</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                Para el católico, la Santa Misa no es un mero "banquete", ni una asamblea comunitaria, ni un simple memorial litúrgico. El Santo Sacrificio de la Misa es <b>el mismo y único sacrificio de la Cruz</b>, ofrecido a la Majestad Divina por Jesucristo a través del ministerio del sacerdote. La única diferencia radica en que en el Calvario el derramamiento de sangre fue cruento, mientras que en el altar es incruento.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">Los Cuatro Fines del Altar</h3>
+            <p class="texto-tarjeta-oscura">
+                El sacerdote sube al altar para cumplir cuatro fines innegociables: <br>
+                <b>1. Latréutico:</b> Adorar a Dios con una reverencia infinita.<br>
+                <b>2. Eucarístico:</b> Darle gracias por los inmensos beneficios recibidos.<br>
+                <b>3. Propiciatorio:</b> Aplacar la justa ira de Dios, expiando nuestros pecados y los de las benditas almas del Purgatorio.<br>
+                <b>4. Impetratorio:</b> Suplicar las gracias necesarias para nuestra salvación.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">El Grave Deber del Precepto</h3>
+            <p class="texto-tarjeta-oscura">
+                Bajo pena de <b>pecado mortal</b>, la Santa Iglesia ordena a todos los fieles que han llegado al uso de razón asistir a la Santa Misa íntegra los domingos y fiestas de guardar. Quien por pereza, negligencia o desprecio falta a este precepto, viola el Tercer Mandamiento y se aparta de la gracia santificante de Dios.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                Ante el afán del progresismo moderno por convertir el santuario en un teatro antropocéntrico (centrado en el hombre), nos aferramos al rito de San Pío V. Esta liturgia inmemorial expresa sin ambigüedades la naturaleza sacrificial del altar, protegiendo el dogma católico y la Presencia Real, tal como fue definido infaliblemente por la Iglesia de siempre.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Concilio de Trento, Sesión XXII (Doctrina sobre el Santísimo Sacrificio de la Misa).<br>
+                    • Catecismo del Concilio de Trento (Parte II: El Sacramento de la Eucaristía).<br>
+                    • Papa San Pío V, Bula "Quo Primum Tempore" (1570).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-misa" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-servilia" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #ffd700;">
+                <p class="creditos-latin-titulo" style="color: #ffd700;">De Opere Servili</p>
+                <p class="creditos-latin-sub">El mandato divino del descanso sagrado</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                El Tercer Mandamiento de la Ley de Dios ("Santificarás las fiestas") no solo obliga a asistir al Santo Sacrificio de la Misa, sino que exige el <b>descanso corporal</b> para dedicar la mente y el corazón a Dios. Por ello, la Iglesia prohíbe estrictamente, bajo pena de pecado mortal, realizar <b>Opera Servilia</b> (Obras Serviles) en los domingos y en los días de precepto universal.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">¿Qué es la Opera Servilia?</h3>
+            <p class="texto-tarjeta-oscura">
+                Son todos aquellos trabajos que requieren esfuerzo primariamente físico y corporal, que se realizan para obtener un lucro material, y que históricamente eran ejecutados por siervos o jornaleros. Esto incluye: <b>labores agrícolas, albañilería, mecánica, trabajos de fábrica, limpieza profunda, mudanzas y la venta o comercio público (mercados y tiendas no esenciales).</b>
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">¿Qué obras SÍ están permitidas?</h3>
+            <p class="texto-tarjeta-oscura">
+                La Iglesia autoriza las obras liberales (aquellas donde prima el intelecto sobre el esfuerzo físico): <b>leer, escribir, estudiar, enseñar, tocar instrumentos o hacer arte.</b> También están permitidas las labores domésticas indispensables del día a día (cocinar para ese día, lavar los platos de esa comida), así como las obras de piedad (viajar para peregrinar) y caridad urgente.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">La Gravedad del Pecado y el Deber del Patrón</h3>
+            <p class="texto-tarjeta-oscura">
+                La omisión de este precepto es materia grave. San Alfonso María de Ligorio enseña que trabajar servilmente durante un tiempo considerable (generalmente más de 2 o 3 horas) sin causa que lo justifique, constituye un <b>pecado mortal</b>. Asimismo, cometen pecado grave los jefes, patrones y empleadores que obligan a sus subordinados a trabajar en día de precepto sin una extrema necesidad.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">¿Existen excepciones legítimas?</h3>
+            <p class="texto-tarjeta-oscura">
+                La Iglesia no es tirana y dispensa del descanso en casos de verdadera gravedad: <br>
+                <b>1. Necesidad extrema:</b> Quien vive en la miseria y no tendría qué comer al día siguiente si no trabaja hoy.<br>
+                <b>2. Utilidad y Bien Público:</b> Médicos, enfermeros, policías, soldados, bomberos y trabajadores de servicios esenciales (agua, electricidad, transporte básico) que no pueden detenerse sin causar daño a la sociedad.<br>
+                <b>3. Emergencias:</b> Salvar una cosecha de una tormenta inminente o reparar un daño urgente en el hogar.<br>
+                <i>Nota: En caso de duda razonable sobre el propio empleo, el fiel debe consultar y pedir dispensa formal a su Párroco.</i>
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Tercer Mandamiento de la Ley de Dios (Éxodo 20, 8-11).<br>
+                    • Catecismo del Concilio de Trento (Obligación de apartarse de los negocios para vacar a las cosas divinas).<br>
+                    • Código de Derecho Canónico (1917): Canon 1248 (Festis de praecepto diebus Missae audiendae... et ab opere servili abstinendum).<br>
+                    • Teología Moral, San Alfonso María de Ligorio (Tratado sobre el Tercer Mandamiento).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-servilia" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-temporas" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner">
+                <p class="creditos-latin-titulo">Quattuor Tempora</p>
+                <p class="creditos-latin-sub">El combate espiritual de las Cuatro Estaciones</p>
+            </div>
+            
+            <p class="texto-tarjeta-oscura">
+                Las <b>Témporas</b> (en latín, <i>Quattuor Tempora</i>) son el escudo con el que la Iglesia consagra las cuatro estaciones del año a Dios, mediante el ayuno riguroso, la abstinencia y la oración. Su objetivo principal es expiar los pecados cometidos en la estación anterior, dar gracias por los frutos de la tierra y, sobre todo, suplicar por la santidad de los sacerdotes, ya que el Sábado de Témporas era el día tradicional e inquebrantable de las ordenaciones sacerdotales.
+            </p>
+            
+            <h3 class="seccion-titulo titulo-arena">Color Litúrgico</h3>
+            <p class="texto-tarjeta-oscura">
+                Exceptuando las de Pentecostés (que son de color rojo por el fuego del Espíritu Santo), todas las Témporas exigen vestimentas <b>moradas</b>, pues son días de llanto, ceniza y mortificación.
+            </p>
+
+            <h3 class="seccion-titulo titulo-arena">Precedencia Litúrgica</h3>
+            <p class="texto-tarjeta-oscura">
+                Las Témporas de Primavera, Otoño e Invierno son de <b>II Clase</b>. Si un santo de III Clase cae en uno de estos días, el Santo desaparece de la Misa principal (se le hace una conmemoración estricta en la colecta, pero la Misa es de Témporas, con ornamentos morados). Si choca contra un santo de I Clase (como San Mateo o Santo Tomás Apóstol en diciembre), el Apóstol triunfa, pero se hace conmemoración de las Témporas. Las de Pentecostés, al ser de <b>I Clase</b>, no ceden ante nadie.
+            </p>
+
+            <h3 class="seccion-titulo titulo-arena">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                El modernismo, en su afán por acomodar la religión a la comodidad del mundo, destruyó esta disciplina en las reformas post-conciliares. Le dijeron al hombre que el ayuno ya no era importante, que bastaba con vagas "obras de caridad". Mintieron. Como enseña la Tradición, la carne debe ser sometida, los pecados deben ser expiados y la creación entera debe ser devuelta a Dios a través de la mortificación corporal.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales e Históricas:</b><br>
+                    • Papa San León Magno (s. V): Sermones "De Jejunio Quattuor Temporum" (De origen y tradición apostólica).<br>
+                    • Código de Derecho Canónico (1917): Canon 1252 (Ley inquebrantable de ayuno y abstinencia) y Canon 1006 (Días prescritos para las ordenaciones sagradas).<br>
+                    • Rubricae Generales Breviarii et Missalis Romani (1960): Tít. II, n. 11 y 12 (Sobre la clasificación litúrgica de II y I Clase).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-temporas" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-vigilia" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #b366ff;">
+                <p class="creditos-latin-titulo" style="color: #b366ff;">De Vigiliis</p>
+                <p class="creditos-latin-sub">El vestíbulo sagrado hacia la gloria celestial</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                En la jerga del mundo moderno, la noción de "vigilia" ha sido deformada hasta convertirse en la mera conveniencia de asistir a Misa el sábado por la tarde para "cumplir" rápidamente con el precepto dominical y dejar el domingo libre para el ocio profano. <b>Esto es una grave mutilación litúrgica.</b> En la Tradición Apostólica de la Iglesia, la Vigilia (del latín <i>vigilare</i>, estar en vela) no es una simple tarde, sino el <b>día litúrgico completo</b> (24 horas) que precede y prepara el alma para una gran Solemnidad.
+            </p>
+
+            <h3 class="seccion-titulo titulo-morado">El Vestíbulo del Rey</h3>
+            <p class="texto-tarjeta-oscura">
+                Si un hombre fuese convocado a una audiencia privada con el Rey del Universo, no entraría a la sala del trono corriendo, sudado y con la ropa manchada de su jornada laboral. Primero se detendría en el vestíbulo, lavaría sus ropas y prepararía su mente en silencio reverente. <br><br>
+                <b>La Vigilia es ese vestíbulo.</b> Mientras el mundo secular se lanza a festejar por adelantado con gula y ruido, la Iglesia Católica frena en seco, viste sus altares de estricto morado, silencia los órganos y llama al recogimiento total.
+            </p>
+
+            <h3 class="seccion-titulo titulo-morado">La Cruz antes de la Gloria</h3>
+            <p class="texto-tarjeta-oscura">
+                La mente moderna padece de "inmediatez"; anhela la corona sin pasar por el Calvario. Celebra la Navidad desde noviembre y para el 25 de diciembre ya arroja el pesebre a la basura. La observancia de las Vigilias destruye este conformismo y educa al fiel en tres verdades inmutables:
+                <br><br>
+                <b>1. El estado de Gracia:</b> Exhorta al fiel a acercarse hoy mismo al confesionario, pues es un sacrilegio acercarse a comulgar mañana en la gran fiesta con el alma en pecado mortal.<br>
+                <b>2. El verdadero sacrificio:</b> Enseña de manera palpable que no hay Gloria sin Cruz previa.<br>
+                <b>3. El catolicismo diario:</b> Destruye el "catolicismo de fin de semana", recordando que la Religión no es un evento social de una hora, sino el sometimiento continuo del cuerpo y el alma a Dios.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias y Defensa Magisterial:</b><br>
+                    • Dom Próspero Guéranger, "El Año Litúrgico" (Sobre la disciplina y observancia inmemorial de las Vigilias frente a las festividades de los Santos).<br>
+                    • San Jerónimo, "Contra Vigilancio" (Feroz defensa patrística del valor meritorio de velar y ayunar en la víspera de las solemnidades y mártires).<br>
+                    • Codex Iuris Canonici (1917), Canon 1252 (Sobre el ayuno estricto obligatorio en las Vigilias Mayores).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-vigilia-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-octava" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #d4af37;">
+                <p class="creditos-latin-titulo" style="color: #d4af37;">De Octavis</p>
+                <p class="creditos-latin-sub">La prolongación terrenal del júbilo celestial</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                La Santa Madre Iglesia, reconociendo que la pequeñez del entendimiento humano no puede asimilar la inmensidad de los grandes misterios divinos (como la Encarnación, la Resurrección o Pentecostés) en un solo día de veinticuatro horas, ha instituido desde tiempos apostólicos la majestuosa celebración de las <b>Octavas</b>.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">El Misterio del "Octavo Día"</h3>
+            <p class="texto-tarjeta-oscura">
+                La Octava es la prolongación ininterrumpida del júbilo litúrgico durante ocho días continuos. El número ocho en la Tradición cristiana simboliza la <b>eternidad y la perfección</b>. Tras los siete días de la creación inicial (el tiempo pasajero), Nuestro Señor Jesucristo resucitó en el "octavo día", introduciéndonos a la nueva creación y a la gloria que no tiene fin. Celebrar la Octava es asomarse a la eternidad.
+            </p>
+
+            <h3 class="seccion-titulo titulo-dorado">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                El modernismo secular desprecia esta psicología católica del tiempo. El mundo reduce las fiestas a eventos efímeros que se consumen ruidosamente y se desechan al día siguiente (apagando las luces el 26 de diciembre o el lunes de Pascua). El fiel tradicional, al observar la Octava <i>(Infra Octavam)</i>, resiste la impaciencia del mundo y se sumerge profundamente en la gracia específica que la liturgia dispensa sin prisas durante toda la semana, haciendo que el tiempo terrenal se rinda ante la eternidad de Dios.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • San Agustín, Sermones 259-260 (Sobre la Octava de la Pascua y el vestido blanco de los neófitos).<br>
+                    • Rubricae Generales Breviarii et Missalis Romani (1960), Tít. VIII: "De Octavis" (Naturaleza y jerarquía dogmática de los 8 días).</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-octava-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="vista-rogativa" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #d896ff;">
+                <p class="creditos-latin-titulo" style="color: #d896ff;">De Rogationibus</p>
+                <p class="creditos-latin-sub">Súplicas para aplacar la Ira Divina y bendecir los campos</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                Las <b>Rogativas</b> son días de profunda súplica penitencial en los que la Iglesia, reconociendo la pequeñez humana ante la inmensidad de la creación, se viste de morado para clamar misericordia a Dios. Su finalidad es doble: aplacar la justa ira divina pidiendo protección contra calamidades (pestes, guerras, terremotos, sequías) e implorar la bendición del Cielo sobre los frutos de la tierra y las cosechas agrícolas.
+            </p>
+
+            <h3 class="seccion-titulo titulo-lila">Rogativas Mayores y Menores</h3>
+            <p class="texto-tarjeta-oscura">
+                <b>La Rogativa Mayor:</b> Se celebra invariablemente el 25 de abril. Fue instituida en Roma por el Papa San Gregorio Magno para erradicar una antigua procesión pagana (las <i>Robigalia</i>) y suplicar el fin de una devastadora peste. Aunque coincida con la gloriosa fiesta de San Marcos (de color rojo), la procesión de súplica mantiene su estricto carácter penitencial morado.<br><br>
+                <b>Las Rogativas Menores:</b> Comprenden los tres días previos a la Ascensión del Señor (lunes, martes y miércoles). Fueron instituidas en el siglo V por San Mamerto, obispo de Vienne, tras una serie de terribles desastres naturales en las Galias.
+            </p>
+
+            <h3 class="seccion-titulo titulo-lila">Las Letanías de los Santos</h3>
+            <p class="texto-tarjeta-oscura">
+                El acto central de las Rogativas es la recitación solemne de las <b>Letanías Mayores de los Santos</b>. El clero y los fieles marchan en procesión, fuera de los muros de la iglesia o por los campos, repitiendo: <i>"A peste, fame et bello, libera nos Dómine"</i> (De la peste, del hambre y de la guerra, líbranos Señor). La Misa de Rogaciones (Misa de Súplica) se celebra desprovista del Gloria, recordando que aún peregrinamos en un valle de lágrimas.
+            </p>
+
+            <h3 class="seccion-titulo titulo-lila">Defensa de la Fe</h3>
+            <p class="texto-tarjeta-oscura" style="font-style: italic;">
+                El hombre moderno y la teología liberal rechazan las Rogativas por soberbia científica. Creen que el clima y las plagas son "solo procesos naturales" y que Dios no castiga ni interviene en el orden temporal. La Iglesia de Siempre, en cambio, sabe que Dios es Señor absoluto de la Historia y la Creación. Despreciar las Rogativas es un acto de ceguera espiritual.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Misal Romano (1962), Rubricae Generales, "De Rogationibus".<br>
+                    • Papa San Gregorio Magno (Institución de las Letanías Mayores, año 590).<br>
+                    • Rituale Romanum, De Processionibus.</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-rogativa-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-reparacion" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner" style="border-color: #ff4d4d; border-image: linear-gradient(to right, #ff4d4d, #87cefa) 1;">
+                <p class="creditos-latin-titulo" style="background: linear-gradient(to right, #ff4d4d, #87cefa); -webkit-background-clip: text; background-clip: text; color: transparent;">De Devotionibus Reparationis</p>
+                <p class="creditos-latin-sub" style="color: #e0d8c8;">La consolación de los Sagrados Corazones</p>
+            </div>
+
+            <p class="texto-tarjeta-oscura">
+                El mundo moderno, sumergido en la apostasía y el laicismo, ofende gravemente la Majestad Divina. Ante esta insolencia, el Cielo mismo ha descendido para pedir actos de <b>Reparación</b>. La reparación consiste en ofrecer oraciones, penitencias y, sobre todo, la Santa Comunión, para consolar a los Corazones de Jesús y de María por los ultrajes, sacrilegios e indiferencias con los que son ofendidos.
+            </p>
+
+            <h3 class="seccion-titulo titulo-rojo">Los 9 Primeros Viernes (Sagrado Corazón)</h3>
+            <p class="texto-tarjeta-oscura">
+                Revelada por el propio Jesucristo a Santa Margarita María de Alacoque (1673) en Paray-le-Monial. El Señor mostró su Corazón rodeado de espinas y dijo: <i>"He aquí este Corazón que tanto ha amado a los hombres... y en reconocimiento no recibo de la mayor parte sino ingratitud".</i><br><br>
+                <b>¿Cómo se cumple?</b> Consiste en recibir la Santa Comunión durante nueve (9) Primeros Viernes de mes <b>consecutivos y sin interrupción</b>, en estado de gracia (previa Confesión), con la intención específica de hacer reparación al Sagrado Corazón. Quien lo cumpla tiene la "Gran Promesa" del Cielo: la gracia de la penitencia final (no morirá en pecado mortal). El Misal de 1962 otorga rúbricas privilegiadas este día para celebrar la Misa Votiva <i>Cogitationes Cordis</i>.
+            </p>
+
+            <h3 class="seccion-titulo titulo-azul">Los 5 Primeros Sábados (Inmaculado Corazón)</h3>
+            <p class="texto-tarjeta-oscura">
+                Revelada por la Santísima Virgen María a Sor Lucía de Fátima en Pontevedra (1925). La Virgen pidió consolar su Corazón, rodeado por las espinas de las blasfemias contra sus privilegios marianos.<br><br>
+                <b>¿Cómo se cumple?</b> Consiste en realizar cuatro actos durante cinco (5) Primeros Sábados de mes consecutivos: <br>
+                1. Confesarse (dentro de los 8 días previos o posteriores).<br>
+                2. Recibir la Santa Comunión.<br>
+                3. Rezar cinco misterios del Santo Rosario.<br>
+                4. Hacerle compañía a la Virgen durante 15 minutos meditando sobre los misterios del Rosario.<br>
+                <i>Todo esto debe hacerse con la intención explícita de reparar al Inmaculado Corazón.</i>
+            </p>
+
+            <h3 class="seccion-titulo titulo-arena">Preguntas Frecuentes</h3>
+            <p class="texto-tarjeta-oscura">
+                <b>¿Es obligatorio ir a Misa y comulgar estos días?</b> No bajo pena de pecado mortal (como el precepto dominical). Sin embargo, el Papa Pío XI declara que el deber de reparar es un mandato vinculante para todo cristiano que ame a Dios. Ignorarlo por pereza es una grave frialdad espiritual.<br><br>
+                <b>¿Qué hago si por mi trabajo no puedo ir a Misa en la mañana?</b> En la actualidad, muchos fieles hacen el sacrificio de buscar capillas con Misas muy de madrugada o vespertinas. Si es absolutamente imposible por el estado de vida (Opera Servilia justificada), el fiel debe rezar los actos de reparación en su hogar y unirse espiritualmente a las Misas que se ofician en el mundo, haciendo una Comunión Espiritual.
+            </p>
+
+            <div class="referencias-contenedor">
+                <p class="referencias-texto">
+                    <i><b>Referencias Magisteriales:</b><br>
+                    • Papa Pío XI, Encíclica "Miserentissimus Redemptor" (1928), sobre el deber universal de la Reparación.<br>
+                    • Revelaciones de Paray-le-Monial (S. Margarita María de Alacoque) y Fátima (Sor Lucía), formalmente aprobadas e impulsadas por el Magisterio de la Iglesia.</i>
+                </p>
+            </div>
+
+            <div class="contenedor-btn-retorno">
+                <button id="btn-cerrar-reparacion-info" class="btn-volver-creditos">☩ Retornar a la Festividad ☩</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-creditos" style="display: none;">
+        <div class="creditos-tarjeta-oscura">
+            <div class="creditos-latin-banner">
+                <p class="creditos-latin-titulo">Opus ab Archangelo Raphaële et Ludovico IX perfectum</p>
+                <p class="creditos-latin-sub">ad laudem et gloriam Trinitatis Sacrosanctæ</p>
+            </div>
+            <p class="creditos-texto-intro">Si en vuestro corazón anida el fervor de compartir visiones, enaltecer nuestras gestas, reportar bugs o manifestar vuestro justo disgusto ante las flaquezas de esta obra, enviad vuestras epístolas a través de nuestros mensajeros. Toda ofrenda de sabiduría será recibida con la humildad de un monje copista.</p>
+            <div class="creditos-contacto">
+                <b class="creditos-label-oro">Epístolas:</b> <br>
+                <a href="mailto:luis17sdm@hotmail.com?subject=Cruzada%20de%20la%20Santisima%20Trinidad" class="creditos-email">luis17sdm@hotmail.com</a><br>
+                <span class="creditos-sello">(Sellad vuestro pergamino con el Asunto: Extension Chrome - Calendario Santoral Tradicional)</span>
+            </div>
+            <div class="creditos-redes">
+                <a href="https://www.facebook.com/luis.durmon.2025/" target="_blank" class="creditos-red-link">
+                    <img src="assets/fb.webp" alt="FB" class="icono-red"> Luis DurMon
+                </a>
+                <a href="https://www.instagram.com/sir_arcangelrafael_elmagnanimo/" target="_blank" class="creditos-red-link">
+                    <img src="assets/ig.webp" alt="IG" class="icono-red"> sir_arcangelrafael
+                </a>
+            </div>
+
+            <div class="creditos-acciones">
+                <a href="https://buymeacoffee.com/LuisIX" target="_blank" class="btn-donar-bmac">☕ Apoya este Proyecto</a>
+                <button id="btn-cerrar-creditos" class="btn-volver-creditos">☩ Retornar al Misal ☩</button>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="btn-abrir-creditos" class="footer-desarrollador">
+        ☩ Desarrollado por Luis DurMon☩
+    </div>
+
+    <div id="modal-rosario-overlay" style="display: none;">
+        <div id="modal-rosario-content">
+            
+            <div class="rosario-header">
+                <h2>☩ Arma Militiæ ☩</h2>
+                <h3>El Santo Rosario Diario</h3>
+            </div>
+            
+            <p class="rosario-texto-principal">
+                La Santa Madre Iglesia y Nuestra Señora de Fátima suplican el rezo diario del Santo Rosario para alcanzar la paz y la salvación de las almas. Siendo hoy <b id="rosario-dia-semana"></b>, la Tradición Católica medita los:
+            </p>
+            
+            <h3 id="rosario-misterios"></h3>
+            
+            <p class="rosario-texto-secundario">
+                (La devoción perfecta y el Salterio completo exigen rezar las 15 decenas diariamente si el estado de vida lo permite).
+            </p>
+
+            <div class="rosario-bloque">
+                <h4 class="titulo-azul">☩ Antífona Mariana Estacional ☩</h4>
+                <p class="descripcion">
+                    Todo soldado de Cristo culmina su jornada rindiendo honores a su Reina. Según el tiempo litúrgico actual, la Tradición manda concluir con:
+                </p>
+                <h5 id="rosario-titulo-antifona"></h5>
+                <p id="rosario-texto-antifona"></p>
+            </div>
+
+            <div class="rosario-bloque">
+                <h4 class="titulo-rojo">☩ Devoción Diaria ☩</h4>
+                <p class="descripcion">
+                    Aunque el Santo Rosario se sella siempre con las Letanías Lauretanas, la piedad tradicional consagra cada día a un misterio distinto. Para ganar mayores gracias, hoy se recomienda rezar también las:
+                </p>
+                <h5 id="rosario-titulo-letania"></h5>
+            </div>
+            
+            <div class="rosario-acciones">
+                <label class="rosario-label">
+                    <input type="checkbox" id="chk-rosario-rezado">
+                    Ya he cumplido con mi deber hoy
+                </label>
+                <button id="btn-rosario-entendido" class="btn-accion-liturgica">☩ ENTENDIDO ☩</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="motor_liturgico.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
